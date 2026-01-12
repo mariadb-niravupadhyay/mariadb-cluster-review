@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MariaDB AI Architecture Review - Analysis Report</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <img src="images/logo-white-1x.14cd79.png" alt="MariaDB" class="header-logo">
+                <h1>AI Based Architecture Review</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="customers.html" class="nav-link">Customers</a>
+                <a href="clusters.html" class="nav-link">Topologies</a>
+                <a href="nodes.html" class="nav-link">Nodes</a>
+                <a href="#" class="nav-link active">Analysis Report</a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content analysis-page">
+            <!-- Report Header -->
+            <div class="report-header">
+                <div class="report-info">
+                    <h2 id="reportTitle">Architecture Analysis Report</h2>
+                    <p class="report-meta">
+                        <span id="reportCustomer">Customer: -</span>
+                        <span id="reportCluster">Cluster: -</span>
+                        <span id="reportDate">Generated: -</span>
+                    </p>
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-secondary" onclick="window.print()">Export PDF</button>
+                    <a href="index.html" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+            </div>
+
+            <!-- Analysis Content -->
+            <div class="analysis-layout">
+                <!-- Left: Results -->
+                <div class="analysis-results">
+                    <!-- Summary -->
+                    <div class="result-card">
+                        <div class="card-header">
+                            <h3>Summary</h3>
+                            <div class="header-badges">
+                                <span class="source-badge" id="analysisSource">Connecting...</span>
+                                <span class="health-badge" id="healthBadge">Analyzing...</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p id="healthSummary" class="health-summary"></p>
+                            
+                            <!-- Workload Metrics (QPS, Connections) -->
+                            <div class="metrics-grid" id="metricsGrid">
+                                <!-- Will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Per Node Workload Details -->
+                    <div class="result-card" id="nodeDetailsCard">
+                        <div class="card-header">
+                            <h3>Per Node Workload Details</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="nodes-grid" id="nodesGrid"></div>
+                        </div>
+                    </div>
+
+                    <!-- Architecture Assessment (Critical Questions) -->
+                    <div class="result-card" id="assessmentCard" style="display: none;">
+                        <div class="card-header">
+                            <h3 id="assessmentCardTitle">Architecture Assessment</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="assessment-grid" id="assessmentGrid">
+                                <!-- Will be populated with capacity, HA/DR, bottleneck assessments -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Findings -->
+                    <div class="result-card">
+                        <div class="card-header">
+                            <h3>Analysis Findings</h3>
+                            <div class="finding-counts" id="findingCounts"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="findings-list" id="findingsList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="result-card">
+                        <div class="card-header">
+                            <h3>Recommendations</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="recommendations-list" id="recommendationsList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Analysis Sources -->
+                    <div class="result-card" id="sourcesCard">
+                        <div class="card-header">
+                            <h3>Analysis Sources & References</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="analysisSources" class="analysis-sources">
+                                <!-- Sources will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: AI Chat -->
+                <div class="chat-panel">
+                    <div class="chat-header">
+                        <h3>AI Assistant</h3>
+                        <p class="chat-subtitle">Ask questions about your analysis</p>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-message assistant">
+                            <div class="message-content">
+                                I've analyzed your database environment. You can ask me questions about the findings, get clarification on recommendations, or inquire about specific metrics.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" placeholder="Ask about your cluster..." onkeypress="handleChatKeypress(event)">
+                        <button class="btn btn-primary" onclick="sendChat()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                <span>Powered by MariaDB Cloud Vector + Google Gemini AI</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Analyzing with AI...</div>
+            <div class="loading-subtext">Calling Gemini AI for deep analysis</div>
+        </div>
+    </div>
+
+    <script src="js/analysis.js"></script>
+</body>
+</html>

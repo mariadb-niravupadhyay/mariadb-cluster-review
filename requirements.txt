@@ -1,0 +1,21 @@
+# FastAPI and server
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+python-multipart>=0.0.9
+
+# Data validation
+pydantic>=2.10.0
+pydantic-settings>=2.6.0
+
+# Configuration
+pyyaml>=6.0.2
+
+# Utilities
+python-dateutil>=2.9.0
+
+# AI and Vector Features
+google-generativeai>=0.8.0
+mariadb>=1.1.10
+
+# MCP (Model Context Protocol)
+# Note: MCP integration uses built-in remote-mdb-docs server

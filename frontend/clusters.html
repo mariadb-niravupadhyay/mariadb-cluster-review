@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clusters - MariaDB AI Advisor</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <img src="images/logo-white-1x.14cd79.png" alt="MariaDB" class="header-logo">
+                <h1>AI Based Architecture Review</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="customers.html" class="nav-link">Customers</a>
+                <a href="clusters.html" class="nav-link active">Topologies</a>
+                <a href="nodes.html" class="nav-link">Nodes</a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Search Box -->
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search clusters by name, customer, or topology..." oninput="filterTable()">
+            </div>
+
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>Database Topologies</h2>
+                    <p class="subtitle" id="pageSubtitle">All Database Topologies</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-primary" onclick="showAddClusterDialog()">+ Add Topology</button>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar" id="filterBar" style="display:none;">
+                <span class="filter-label">Filtered by customer:</span>
+                <span class="filter-value" id="filterCustomerName"></span>
+                <button class="btn btn-xs btn-secondary" onclick="clearFilter()">Clear Filter</button>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div class="table-loading" id="tableLoading">
+                <div class="loading-spinner"></div>
+                <span>Loading data...</span>
+            </div>
+
+            <!-- Clusters Table -->
+            <div class="data-table-container" id="tableContainer" style="display: none;">
+                <table class="data-table" id="clustersTable">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Topology Name</th>
+                            <th>Topology Type</th>
+                            <th>Environment</th>
+                            <th>Nodes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clustersTableBody">
+                        <tr class="empty-row"><td colspan="6">No topologies configured.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                <span>Powered by MariaDB Cloud Vector + Google Gemini AI</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Add Cluster Modal -->
+    <div class="modal" id="clusterModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Cluster</h3>
+                <button class="modal-close" onclick="closeModal('clusterModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Customer *</label>
+                    <select id="clusterCustomer">
+                        <!-- Populated dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Cluster Name *</label>
+                    <input type="text" id="clusterName" placeholder="e.g., production-galera">
+                </div>
+                <div class="form-group">
+                    <label>Topology Type *</label>
+                    <select id="clusterTopology">
+                        <option value="galera">Galera Cluster</option>
+                        <option value="semi-sync">Semi-Synchronous Replication</option>
+                        <option value="async">Async Replication</option>
+                        <option value="standalone">Standalone</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Environment</label>
+                    <select id="clusterEnvironment">
+                        <option value="production">Production</option>
+                        <option value="staging">Staging</option>
+                        <option value="development">Development</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('clusterModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="addClusterFromPage()">Add Cluster</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let filterCustomerId = null;
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadData();
+            
+            // Check for customer filter in URL
+            const params = new URLSearchParams(window.location.search);
+            filterCustomerId = params.get('customer');
+            if (filterCustomerId) filterCustomerId = isNaN(filterCustomerId) ? filterCustomerId : parseInt(filterCustomerId);
+            
+            if (filterCustomerId) {
+                const customer = appData.customers.find(c => c.id == filterCustomerId);
+                if (customer) {
+                    document.getElementById('filterBar').style.display = 'flex';
+                    document.getElementById('filterCustomerName').textContent = customer.name;
+                    document.getElementById('pageSubtitle').textContent = `Clusters for ${customer.name}`;
+                }
+            }
+            
+            document.getElementById('tableLoading').style.display = 'none';
+            document.getElementById('tableContainer').style.display = 'block';
+            renderClustersPage();
+        });
+        
+        function clearFilter() {
+            window.location.href = 'clusters.html';
+        }
+        
+        function renderClustersPage() {
+            const tbody = document.getElementById('clustersTableBody');
+            const allClusters = [];
+            
+            appData.customers.forEach(customer => {
+                if (filterCustomerId && customer.id != filterCustomerId) return;
+                customer.clusters.forEach(cluster => {
+                    allClusters.push({ customer, cluster });
+                });
+            });
+            
+            if (allClusters.length === 0) {
+                tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No clusters configured.</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = allClusters.map(({ customer, cluster }) => {
+                const hasNodes = cluster.nodes.length > 0;
+                return `
+                <tr>
+                    <td><a href="customers.html" class="link">${escapeHtml(customer.name)}</a></td>
+                    <td><strong>${escapeHtml(cluster.name)}</strong></td>
+                    <td><span class="badge badge-${cluster.topology}">${cluster.topology}</span></td>
+                    <td>${cluster.environment || '-'}</td>
+                    <td><a href="nodes.html?cluster=${cluster.id}" class="link">${cluster.nodes.length} node(s)</a></td>
+                    <td class="actions-cell">
+                        ${hasNodes ? `<button class="btn btn-xs btn-primary" onclick="runClusterAnalysis('${customer.id}', '${cluster.id}')">Architecture Review</button>` : ''}
+                        ${hasNodes ? `<button class="btn btn-xs btn-outline" onclick="openLogsAnalyzer('${customer.id}', '${cluster.id}')">Logs Analyzer</button>` : ''}
+                        <button class="btn btn-xs btn-secondary" onclick="goToAddNode('${cluster.id}')">+ Node</button>
+                        <button class="btn btn-xs btn-danger" onclick="deleteClusterAndRefresh('${customer.id}', '${cluster.id}')">Delete</button>
+                    </td>
+                </tr>
+            `}).join('');
+        }
+        
+        function showAddClusterDialog() {
+            // Populate customer dropdown
+            const select = document.getElementById('clusterCustomer');
+            select.innerHTML = appData.customers.map(c => 
+                `<option value="${c.id}" ${filterCustomerId == c.id ? 'selected' : ''}>${escapeHtml(c.name)}</option>`
+            ).join('');
+            
+            if (appData.customers.length === 0) {
+                alert('Please add a customer first.');
+                return;
+            }
+            showModal('clusterModal');
+        }
+        
+        async function addClusterFromPage() {
+            const customerId = document.getElementById('clusterCustomer').value;
+            const name = document.getElementById('clusterName').value.trim();
+            const topology = document.getElementById('clusterTopology').value;
+            const environment = document.getElementById('clusterEnvironment').value;
+            
+            if (!name) {
+                alert('Please enter a cluster name');
+                return;
+            }
+            
+            if (useAPI) {
+                try {
+                    const response = await fetch(`${DATA_API}/clusters`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            customer_id: parseInt(customerId),
+                            name: name,
+                            topology: topology,
+                            environment: environment
+                        })
+                    });
+                    const result = await response.json();
+                    if (!response.ok || !result.success) {
+                        alert(result.detail || result.error || 'Failed to create cluster');
+                        return;
+                    }
+                    await loadFullDataFromAPI();
+                } catch (error) {
+                    alert('Error creating cluster: ' + error.message);
+                    return;
+                }
+            } else {
+                const customer = appData.customers.find(c => c.id === customerId);
+                if (!customer) return;
+                
+                customer.clusters.push({
+                    id: generateId(),
+                    name: name,
+                    topology: topology,
+                    environment: environment,
+                    nodes: []
+                });
+                saveToStorage();
+            }
+            
+            closeModal('clusterModal');
+            renderClustersPage();
+        }
+        
+        async function deleteClusterAndRefresh(customerId, clusterId) {
+            await deleteCluster(customerId, clusterId);
+            renderClustersPage();
+        }
+        
+        function goToAddNode(clusterId) {
+            window.location.href = `nodes.html?cluster=${clusterId}&add=true`;
+        }
+        
+        function filterTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#clustersTableBody tr:not(.empty-row)');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

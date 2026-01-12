@@ -1,0 +1,128 @@
+{
+    "cluster_name": "production-replication",
+    "topology_type": "master_replica",
+    "description": "Master with 2 read replicas",
+    "nodes": [
+        {
+            "hostname": "db-master-01",
+            "role": "master",
+            "version": "10.6.22-MariaDB-enterprise",
+            "uptime_seconds": 2592000,
+            "global_status": {
+                "Questions": "1000000000",
+                "Uptime": "2592000",
+                "Threads_connected": "200",
+                "Threads_running": "15",
+                "Max_used_connections": "350",
+                "Com_select": "600000000",
+                "Com_insert": "200000000",
+                "Com_update": "150000000",
+                "Com_delete": "50000000",
+                "Slow_queries": "10000",
+                "Innodb_buffer_pool_reads": "500000",
+                "Innodb_buffer_pool_read_requests": "100000000",
+                "Innodb_buffer_pool_pages_data": "800000",
+                "Innodb_buffer_pool_pages_total": "1000000"
+            },
+            "global_variables": {
+                "max_connections": "500",
+                "innodb_buffer_pool_size": "34359738368",
+                "server_id": "1",
+                "log_bin": "mysql-bin",
+                "binlog_format": "ROW"
+            },
+            "master_status": {
+                "File": "mysql-bin.000123",
+                "Position": "456789"
+            },
+            "system_resources": {
+                "cpu_cores": 16,
+                "ram_gb": 64,
+                "disk_total_gb": 1000,
+                "disk_used_gb": 400,
+                "disk_mount_point": "/data",
+                "cpu_utilization_pct": 55,
+                "ram_utilization_pct": 80
+            }
+        },
+        {
+            "hostname": "db-replica-01",
+            "role": "replica",
+            "version": "10.6.22-MariaDB-enterprise",
+            "uptime_seconds": 2592000,
+            "global_status": {
+                "Questions": "800000000",
+                "Uptime": "2592000",
+                "Threads_connected": "180",
+                "Max_used_connections": "300",
+                "Com_select": "780000000",
+                "Com_insert": "0",
+                "Com_update": "0",
+                "Com_delete": "0",
+                "Innodb_buffer_pool_reads": "400000",
+                "Innodb_buffer_pool_read_requests": "90000000",
+                "Innodb_buffer_pool_pages_data": "750000",
+                "Innodb_buffer_pool_pages_total": "1000000"
+            },
+            "global_variables": {
+                "max_connections": "500",
+                "innodb_buffer_pool_size": "34359738368",
+                "server_id": "2",
+                "read_only": "ON"
+            },
+            "slave_status": {
+                "Slave_IO_Running": "Yes",
+                "Slave_SQL_Running": "Yes",
+                "Seconds_Behind_Master": "5",
+                "Master_Host": "db-master-01",
+                "Last_Error": ""
+            },
+            "system_resources": {
+                "cpu_cores": 16,
+                "ram_gb": 64,
+                "disk_total_gb": 1000,
+                "disk_used_gb": 380,
+                "disk_mount_point": "/data",
+                "cpu_utilization_pct": 40,
+                "ram_utilization_pct": 75
+            }
+        },
+        {
+            "hostname": "db-replica-02",
+            "role": "replica",
+            "version": "10.6.22-MariaDB-enterprise",
+            "uptime_seconds": 2592000,
+            "global_status": {
+                "Questions": "750000000",
+                "Uptime": "2592000",
+                "Threads_connected": "170",
+                "Max_used_connections": "280",
+                "Com_select": "730000000",
+                "Innodb_buffer_pool_reads": "350000",
+                "Innodb_buffer_pool_read_requests": "85000000",
+                "Innodb_buffer_pool_pages_data": "720000",
+                "Innodb_buffer_pool_pages_total": "1000000"
+            },
+            "global_variables": {
+                "max_connections": "500",
+                "innodb_buffer_pool_size": "34359738368",
+                "server_id": "3",
+                "read_only": "ON"
+            },
+            "slave_status": {
+                "Slave_IO_Running": "Yes",
+                "Slave_SQL_Running": "Yes",
+                "Seconds_Behind_Master": "3",
+                "Master_Host": "db-master-01",
+                "Last_Error": ""
+            },
+            "system_resources": {
+                "cpu_cores": 16,
+                "ram_gb": 64,
+                "disk_total_gb": 1000,
+                "disk_used_gb": 375,
+                "disk_mount_point": "/data"
+            }
+        }
+    ]
+}

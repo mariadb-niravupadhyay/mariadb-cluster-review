@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs Analyzer - MariaDB AI Advisor</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <img src="images/logo-white-1x.14cd79.png" alt="MariaDB" class="header-logo">
+                <h1>AI Based Architecture Review</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="customers.html" class="nav-link">Customers</a>
+                <a href="clusters.html" class="nav-link">Topologies</a>
+                <a href="nodes.html" class="nav-link">Nodes</a>
+                <a href="logs.html" class="nav-link active">Logs Analyzer</a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>AI Logs Analyzer</h2>
+                    <p class="subtitle" id="clusterInfo">Analyzing logs for cluster</p>
+                </div>
+                <div class="page-actions">
+                    <a href="index.html" class="btn btn-secondary">← Back to Dashboard</a>
+                </div>
+            </div>
+
+            <!-- Node Logs Input Section -->
+            <div class="logs-container">
+                <div class="logs-input-section">
+                    <div class="result-card">
+                        <div class="card-header">
+                            <h3>Log Files for Each Node</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="input-mode-toggle">
+                                <button class="toggle-btn active" id="btnUpload" onclick="setInputMode('upload')">Upload Files</button>
+                                <button class="toggle-btn" id="btnPaste" onclick="setInputMode('paste')">Paste Text</button>
+                            </div>
+                            <div id="nodeLogInputs">
+                                <!-- Node log inputs will be dynamically generated -->
+                            </div>
+                            <div class="logs-actions">
+                                <button class="btn btn-primary btn-lg" onclick="analyzeAllLogs()">
+                                    Analyze Logs with AI
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Results -->
+                <div class="logs-results-section" id="logsResultsSection" style="display: none;">
+                    <div class="result-card">
+                        <div class="card-header">
+                            <h3>Log Analysis Results</h3>
+                            <span class="source-badge" id="logsSource">Gemini AI</span>
+                        </div>
+                        <div class="card-body">
+                            <div id="logsAnalysisResults">
+                                <!-- Results will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline of Events -->
+                    <div class="result-card">
+                        <div class="card-header">
+                            <h3>Sequence of Events</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="eventsTimeline">
+                                <!-- Timeline will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                <span>Powered by MariaDB Cloud Vector + Google Gemini AI</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Analyzing logs with AI...</div>
+            <div class="loading-subtext">Extracting important events and patterns</div>
+        </div>
+    </div>
+
+    <script src="js/logs.js"></script>
+</body>
+</html>

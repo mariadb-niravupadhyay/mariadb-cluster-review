@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MariaDB AI Advisor - Architecture Review</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <img src="images/logo-white-1x.14cd79.png" alt="MariaDB" class="header-logo">
+                <h1>AI Based Architecture Review</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html" class="nav-link active">Dashboard</a>
+                <a href="customers.html" class="nav-link">Customers</a>
+                <a href="clusters.html" class="nav-link">Topologies</a>
+                <a href="nodes.html" class="nav-link">Nodes</a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Title -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>MariaDB AI Architecture Review</h2>
+                    <p class="subtitle">AI-powered answers to critical questions: capacity, scaling, HA/DR, bottlenecks, and workload analysis</p>
+                </div>
+                <div class="page-actions">
+                    <div class="demo-dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" onclick="toggleDemoMenu()">Load Demo Data ▾</button>
+                        <div class="dropdown-menu" id="demoMenu">
+                            <button onclick="loadSampleCustomer(); toggleDemoMenu();">Galera - Balanced Workload</button>
+                            <button onclick="loadAsyncReplicationDemo(); toggleDemoMenu();">Async Replication - At Capacity</button>
+                            <button onclick="loadGaleraHealthyDemo(); toggleDemoMenu();">Galera - Write Heavy (Healthy)</button>
+                            <hr style="margin: 0.5rem 0; border-color: var(--border-color);">
+                            <button onclick="loadGaleraFlowControlDemo(); toggleDemoMenu();">⚠️ Galera - Flow Control Bottleneck</button>
+                            <button onclick="loadSemiSyncDataLossRiskDemo(); toggleDemoMenu();">⚠️ Semi-Sync - Data Loss Risk</button>
+                            <button onclick="loadStandaloneNoHADemo(); toggleDemoMenu();">🔴 Standalone - No HA (Critical)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Getting Started -->
+            <div class="getting-started" id="gettingStarted">
+                <h3>Getting Started</h3>
+                <div class="steps-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Add Customer</h4>
+                            <p>Start by creating a customer profile with name and email. Each customer can have multiple MariaDB clusters.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Define Database Topologies</h4>
+                            <p>Add database topology type (Galera, Replication, Standalone) and environment (Production, Staging, Dev).</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Add Nodes</h4>
+                            <p>Add nodes with system resources, GLOBAL STATUS, GLOBAL VARIABLES, and MaxScale config for comprehensive analysis.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Run AI Analysis</h4>
+                            <p>Get AI-powered architecture review and recommendations using MariaDB documentation and best practices.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Navigation Cards -->
+            <div class="nav-cards">
+                <a href="customers.html" class="nav-card">
+                    <div class="nav-card-icon">👥</div>
+                    <div class="nav-card-content">
+                        <h3>Customers</h3>
+                        <p>Manage customer accounts</p>
+                    </div>
+                    <span class="nav-card-count" id="navCustomerCount">0</span>
+                </a>
+                <a href="clusters.html" class="nav-card">
+                    <div class="nav-card-icon">🌐</div>
+                    <div class="nav-card-content">
+                        <h3>Database Topologies</h3>
+                        <p>Manage database clusters & topology</p>
+                    </div>
+                    <span class="nav-card-count" id="navClusterCount">0</span>
+                </a>
+                <a href="nodes.html" class="nav-card">
+                    <div class="nav-card-icon"><span class="node-icon-box"></span></div>
+                    <div class="nav-card-content">
+                        <h3>Nodes</h3>
+                        <p>Server nodes & metrics</p>
+                    </div>
+                    <span class="nav-card-count" id="navNodeCount">0</span>
+                </a>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                <span>Powered by MariaDB Cloud Vector + Google Gemini AI</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Analyzing with AI...</div>
+            <div class="loading-subtext">Retrieving documentation from vector store</div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

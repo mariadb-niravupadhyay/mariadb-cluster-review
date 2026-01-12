@@ -1,0 +1,37 @@
+# Credentials
+.gak
+.skysql
+.skysql_docker
+.env
+
+# Python
+__pycache__/
+venv/
+*.pyc
+*.pyo
+
+# Node
+node_modules/
+
+# Backup and old files
+*.backup
+*.bak
+*_old*
+*_backup*
+*.orig
+*.tmp
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local development
+*.local
+*.log

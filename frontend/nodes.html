@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nodes - MariaDB AI Advisor</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <img src="images/logo-white-1x.14cd79.png" alt="MariaDB" class="header-logo">
+                <h1>AI Based Architecture Review</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="customers.html" class="nav-link">Customers</a>
+                <a href="clusters.html" class="nav-link">Topologies</a>
+                <a href="nodes.html" class="nav-link active">Nodes</a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Search Box -->
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search nodes by hostname, cluster, or customer..." oninput="filterTable()">
+            </div>
+
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>Nodes</h2>
+                    <p class="subtitle" id="pageSubtitle">All database nodes</p>
+                </div>
+                <div class="page-actions">
+                    <button class="btn btn-primary" onclick="showAddNodeDialog()">+ Add Node</button>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar" id="filterBar" style="display:none;">
+                <span class="filter-label">Filtered by cluster:</span>
+                <span class="filter-value" id="filterClusterName"></span>
+                <button class="btn btn-xs btn-secondary" onclick="clearFilter()">Clear Filter</button>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div class="table-loading" id="tableLoading">
+                <div class="loading-spinner"></div>
+                <span>Loading data...</span>
+            </div>
+
+            <!-- Nodes Table -->
+            <div class="data-table-container" id="tableContainer" style="display: none;">
+                <table class="data-table" id="nodesTable">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Cluster</th>
+                            <th>Hostname</th>
+                            <th>Role</th>
+                            <th>CPU</th>
+                            <th>RAM</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="nodesTableBody">
+                        <tr class="empty-row"><td colspan="7">No nodes configured.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                <span>Powered by MariaDB Cloud Vector + Google Gemini AI</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Add Node Modal -->
+    <div class="modal" id="nodeModal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3>Add Node</h3>
+                <button class="modal-close" onclick="closeModal('nodeModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Cluster *</label>
+                        <select id="nodeCluster">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Hostname *</label>
+                        <input type="text" id="nodeName" placeholder="e.g., db-node-01.example.com">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="nodeRole">
+                            <option value="galera">Galera Node</option>
+                            <option value="primary">Primary</option>
+                            <option value="replica">Replica</option>
+                            <option value="standalone">Standalone</option>
+                            <option value="maxscale">MaxScale</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>CPU Cores</label>
+                        <input type="number" id="nodeCPU" placeholder="e.g., 8">
+                    </div>
+                    <div class="form-group">
+                        <label>RAM (GB)</label>
+                        <input type="number" id="nodeRAM" placeholder="e.g., 32">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Storage (GB)</label>
+                        <input type="number" id="nodeStorage" placeholder="e.g., 500">
+                    </div>
+                    <div class="form-group">
+                        <label>Storage Type</label>
+                        <select id="nodeStorageType">
+                            <option value="ssd">SSD</option>
+                            <option value="nvme">NVMe</option>
+                            <option value="hdd">HDD</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-tabs">
+                    <button class="tab-btn active" onclick="switchNodeTab('status')">SHOW STATUS</button>
+                    <button class="tab-btn" onclick="switchNodeTab('variables')">SHOW VARIABLES</button>
+                    <button class="tab-btn" onclick="switchNodeTab('maxscale')">MaxScale Config</button>
+                </div>
+                
+                <div class="tab-content" id="nodeTab-status">
+                    <div class="form-group">
+                        <label>SHOW GLOBAL STATUS Output</label>
+                        <textarea id="nodeStatus" rows="6" placeholder="Paste the output of SHOW GLOBAL STATUS here..."></textarea>
+                    </div>
+                </div>
+                <div class="tab-content hidden" id="nodeTab-variables">
+                    <div class="form-group">
+                        <label>SHOW GLOBAL VARIABLES Output</label>
+                        <textarea id="nodeVariables" rows="6" placeholder="Paste the output of SHOW GLOBAL VARIABLES here..."></textarea>
+                    </div>
+                </div>
+                <div class="tab-content hidden" id="nodeTab-maxscale">
+                    <div class="form-group">
+                        <label>MaxScale Configuration (if applicable)</label>
+                        <textarea id="nodeMaxscale" rows="6" placeholder="Paste MaxScale configuration file content..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('nodeModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="addNodeFromPage()">Add Node</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let filterClusterId = null;
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadData();
+            
+            // Check for cluster filter in URL
+            const params = new URLSearchParams(window.location.search);
+            filterClusterId = params.get('cluster');
+            if (filterClusterId) filterClusterId = isNaN(filterClusterId) ? filterClusterId : parseInt(filterClusterId);
+            const shouldAdd = params.get('add');
+            
+            if (filterClusterId) {
+                // Find cluster name
+                for (const customer of appData.customers) {
+                    const cluster = customer.clusters.find(c => c.id == filterClusterId);
+                    if (cluster) {
+                        document.getElementById('filterBar').style.display = 'flex';
+                        document.getElementById('filterClusterName').textContent = cluster.name;
+                        document.getElementById('pageSubtitle').textContent = `Nodes in ${cluster.name}`;
+                        break;
+                    }
+                }
+            }
+            
+            document.getElementById('tableLoading').style.display = 'none';
+            document.getElementById('tableContainer').style.display = 'block';
+            renderNodesPage();
+            
+            // Auto-open add dialog if requested
+            if (shouldAdd === 'true') {
+                showAddNodeDialog();
+            }
+        });
+        
+        function clearFilter() {
+            window.location.href = 'nodes.html';
+        }
+        
+        function renderNodesPage() {
+            const tbody = document.getElementById('nodesTableBody');
+            const allNodes = [];
+            
+            appData.customers.forEach(customer => {
+                customer.clusters.forEach(cluster => {
+                    if (filterClusterId && cluster.id != filterClusterId) return;
+                    cluster.nodes.forEach(node => {
+                        allNodes.push({ customer, cluster, node });
+                    });
+                });
+            });
+            
+            if (allNodes.length === 0) {
+                tbody.innerHTML = '<tr class="empty-row"><td colspan="7">No nodes configured.</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = allNodes.map(({ customer, cluster, node }) => {
+                const resources = node.system_resources || {};
+                const hasData = node.global_status && Object.keys(node.global_status).length > 0;
+                return `
+                <tr>
+                    <td><a href="customers.html" class="link">${escapeHtml(customer.name)}</a></td>
+                    <td><a href="clusters.html?customer=${customer.id}" class="link">${escapeHtml(cluster.name)}</a></td>
+                    <td><strong>${escapeHtml(node.hostname)}</strong></td>
+                    <td><span class="badge badge-role">${node.role}</span></td>
+                    <td>${resources.cpu_cores || '-'}</td>
+                    <td>${resources.ram_gb ? resources.ram_gb + ' GB' : '-'}</td>
+                    <td class="actions-cell">
+                        ${hasData ? `<button class="btn btn-xs btn-primary" onclick="runNodeAnalysis('${customer.id}', '${cluster.id}', '${node.id}')">Node Analysis</button>` : ''}
+                        <button class="btn btn-xs btn-outline" onclick="openNodeLogsAnalyzer('${customer.id}', '${cluster.id}', '${node.id}')">Logs Analyzer</button>
+                        <button class="btn btn-xs btn-danger" onclick="deleteNodeAndRefresh('${customer.id}', '${cluster.id}', '${node.id}')">Delete</button>
+                    </td>
+                </tr>
+            `}).join('');
+        }
+        
+        function showAddNodeDialog() {
+            // Populate cluster dropdown
+            const select = document.getElementById('nodeCluster');
+            const options = [];
+            
+            appData.customers.forEach(customer => {
+                customer.clusters.forEach(cluster => {
+                    options.push(`<option value="${cluster.id}" ${filterClusterId == cluster.id ? 'selected' : ''}>${escapeHtml(customer.name)} / ${escapeHtml(cluster.name)}</option>`);
+                });
+            });
+            
+            if (options.length === 0) {
+                alert('Please add a cluster first.');
+                return;
+            }
+            
+            select.innerHTML = options.join('');
+            showModal('nodeModal');
+        }
+        
+        async function addNodeFromPage() {
+            const clusterId = document.getElementById('nodeCluster').value;
+            const name = document.getElementById('nodeName').value.trim();
+            const role = document.getElementById('nodeRole').value;
+            const cpu = parseInt(document.getElementById('nodeCPU').value) || 0;
+            const ram = parseInt(document.getElementById('nodeRAM').value) || 0;
+            const storage = parseInt(document.getElementById('nodeStorage').value) || 0;
+            const storageType = document.getElementById('nodeStorageType').value;
+            
+            if (!name) {
+                alert('Please enter a hostname');
+                return;
+            }
+            
+            // Parse status and variables
+            const statusText = document.getElementById('nodeStatus').value.trim();
+            const variablesText = document.getElementById('nodeVariables').value.trim();
+            const maxscaleText = document.getElementById('nodeMaxscale').value.trim();
+            
+            const globalStatus = statusText ? parseKeyValueData(statusText) : null;
+            const globalVariables = variablesText ? parseKeyValueData(variablesText) : null;
+            const maxscaleConfig = maxscaleText ? parseIniConfig(maxscaleText) : null;
+            
+            if (useAPI) {
+                try {
+                    const response = await fetch(`${DATA_API}/nodes`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            cluster_id: parseInt(clusterId),
+                            hostname: name,
+                            role: role,
+                            cpu_cores: cpu,
+                            ram_gb: ram,
+                            disk_total_gb: storage,
+                            storage_type: storageType,
+                            global_status: globalStatus,
+                            global_variables: globalVariables,
+                            maxscale_config: maxscaleConfig
+                        })
+                    });
+                    const result = await response.json();
+                    if (!response.ok || !result.success) {
+                        alert(result.detail || result.error || 'Failed to create node');
+                        return;
+                    }
+                    await loadFullDataFromAPI();
+                } catch (error) {
+                    alert('Error creating node: ' + error.message);
+                    return;
+                }
+            } else {
+                // Find the cluster for localStorage fallback
+                let targetCluster = null;
+                for (const customer of appData.customers) {
+                    for (const cluster of customer.clusters) {
+                        if (cluster.id === clusterId) {
+                            targetCluster = cluster;
+                            break;
+                        }
+                    }
+                    if (targetCluster) break;
+                }
+                
+                if (!targetCluster) return;
+                
+                const node = {
+                    id: generateId(),
+                    hostname: name,
+                    role: role,
+                    system_resources: {
+                        cpu_cores: cpu,
+                        ram_gb: ram,
+                        disk_total_gb: storage,
+                        storage_type: storageType
+                    },
+                    global_status: globalStatus || {},
+                    global_variables: globalVariables || {},
+                    maxscale_config: maxscaleConfig,
+                    createdAt: new Date().toISOString()
+                };
+                
+                targetCluster.nodes.push(node);
+                saveToStorage();
+            }
+            
+            closeModal('nodeModal');
+            renderNodesPage();
+        }
+        
+        async function deleteNodeAndRefresh(customerId, clusterId, nodeId) {
+            await deleteNode(customerId, clusterId, nodeId);
+            renderNodesPage();
+        }
+        
+        function filterTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#nodesTableBody tr:not(.empty-row)');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

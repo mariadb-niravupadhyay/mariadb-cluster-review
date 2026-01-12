@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers - MariaDB AI Advisor</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <img src="images/logo-white-1x.14cd79.png" alt="MariaDB" class="header-logo">
+                <h1>AI Based Architecture Review</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="customers.html" class="nav-link active">Customers</a>
+                <a href="clusters.html" class="nav-link">Topologies</a>
+                <a href="nodes.html" class="nav-link">Nodes</a>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Search Box -->
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search customers by name or email..." oninput="filterTable()">
+            </div>
+
+            <div class="page-header">
+                <div class="page-title">
+                    <h2>Customers</h2>
+                    <p class="subtitle">Manage customer accounts</p>
+                </div>
+                <div class="page-actions">
+                    <div class="demo-dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" onclick="toggleDemoMenu()">Load Demo Data ▾</button>
+                        <div class="dropdown-menu" id="demoMenu">
+                            <button onclick="loadSampleCustomer(); toggleDemoMenu();">Galera - Balanced Workload</button>
+                            <button onclick="loadAsyncReplicationDemo(); toggleDemoMenu();">Async Replication - At Capacity</button>
+                            <button onclick="loadGaleraHealthyDemo(); toggleDemoMenu();">Galera - Write Heavy (Healthy)</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="showAddCustomer()">+ Add Customer</button>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div class="table-loading" id="tableLoading">
+                <div class="loading-spinner"></div>
+                <span>Loading data...</span>
+            </div>
+
+            <!-- Customers Table -->
+            <div class="data-table-container" id="tableContainer" style="display: none;">
+                <table class="data-table" id="customersTable">
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Email</th>
+                            <th>Topologies</th>
+                            <th>Total Nodes</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersTableBody">
+                        <tr class="empty-row"><td colspan="6">No customers. Click "+ Add Customer" or "Load Demo Data".</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                <span>Powered by MariaDB Cloud Vector + Google Gemini AI</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div class="modal" id="customerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Customer</h3>
+                <button class="modal-close" onclick="closeModal('customerModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Customer Name *</label>
+                    <input type="text" id="customerName" placeholder="e.g., Acme Corporation">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="customerEmail" placeholder="e.g., admin@acme.com">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('customerModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="addCustomerFromPage()">Add Customer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadData();
+            document.getElementById('tableLoading').style.display = 'none';
+            document.getElementById('tableContainer').style.display = 'block';
+            renderCustomersPage();
+        });
+        
+        function renderCustomersPage() {
+            const tbody = document.getElementById('customersTableBody');
+            
+            if (appData.customers.length === 0) {
+                tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No customers. Click "+ Add Customer" or "Load Demo Data".</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = appData.customers.map(customer => {
+                const totalNodes = customer.clusters.reduce((sum, c) => sum + c.nodes.length, 0);
+                const created = customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : '-';
+                return `
+                <tr>
+                    <td><strong>${escapeHtml(customer.name)}</strong></td>
+                    <td>${customer.email || '-'}</td>
+                    <td><a href="clusters.html?customer=${customer.id}" class="link">${customer.clusters.length} topology(s)</a></td>
+                    <td>${totalNodes}</td>
+                    <td>${created}</td>
+                    <td class="actions-cell">
+                        <button class="btn btn-xs btn-primary" onclick="window.location.href='clusters.html?customer=${customer.id}'">View Topologies</button>
+                        <button class="btn btn-xs btn-danger" onclick="deleteCustomerAndRefresh('${customer.id}')">Delete</button>
+                    </td>
+                </tr>
+            `}).join('');
+        }
+        
+        async function deleteCustomerAndRefresh(customerId) {
+            await deleteCustomer(customerId);
+            renderCustomersPage();
+        }
+        
+        async function addCustomerFromPage() {
+            const name = document.getElementById('customerName').value.trim();
+            const email = document.getElementById('customerEmail').value.trim();
+            
+            if (!name) {
+                alert('Please enter a customer name');
+                return;
+            }
+            
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            if (useAPI) {
+                try {
+                    const response = await fetch(`${DATA_API}/customers`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email })
+                    });
+                    const result = await response.json();
+                    if (!response.ok || !result.success) {
+                        alert(result.detail || result.error || 'Failed to create customer');
+                        return;
+                    }
+                    await loadFullDataFromAPI();
+                } catch (error) {
+                    alert('Error creating customer: ' + error.message);
+                    return;
+                }
+            } else {
+                appData.customers.push({
+                    id: generateId(),
+                    name: name,
+                    email: email,
+                    clusters: [],
+                    createdAt: new Date().toISOString()
+                });
+                saveToStorage();
+            }
+            
+            closeModal('customerModal');
+            renderCustomersPage();
+        }
+        
+        // Override for loadSampleCustomer
+        const origLoadSample = loadSampleCustomer;
+        loadSampleCustomer = async function() {
+            await origLoadSample();
+            renderCustomersPage();
+        };
+        
+        function filterTable() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#customersTableBody tr:not(.empty-row)');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

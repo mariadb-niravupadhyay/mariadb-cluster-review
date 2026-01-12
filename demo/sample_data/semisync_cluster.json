@@ -1,0 +1,149 @@
+{
+  "cluster_name": "demo-semisync-cluster",
+  "topology_type": "semi-sync",
+  "nodes": [
+    {
+      "hostname": "db-master-01.demo.local",
+      "role": "master",
+      "system_resources": {
+        "cpu_cores": 8,
+        "ram_gb": 32,
+        "disk_total_gb": 500,
+        "disk_used_gb": 180
+      },
+      "global_status": {
+        "Uptime": "86400",
+        "Questions": "25000000",
+        "Com_select": "18000000",
+        "Com_insert": "4000000",
+        "Com_update": "2500000",
+        "Com_delete": "500000",
+        "Threads_connected": "45",
+        "Threads_running": "8",
+        "Max_used_connections": "180",
+        "Connections": "95000",
+        "Rpl_semi_sync_master_status": "ON",
+        "Rpl_semi_sync_master_clients": "2",
+        "Rpl_semi_sync_master_yes_tx": "150000",
+        "Rpl_semi_sync_master_no_tx": "5",
+        "Rpl_semi_sync_master_avg_wait_time": "850",
+        "Innodb_buffer_pool_read_requests": "500000000",
+        "Innodb_buffer_pool_reads": "1500000",
+        "Innodb_buffer_pool_pages_total": "1310720",
+        "Innodb_buffer_pool_pages_free": "65000",
+        "Innodb_buffer_pool_pages_data": "1200000",
+        "Innodb_row_lock_waits": "150",
+        "Innodb_row_lock_time_avg": "25"
+      },
+      "global_variables": {
+        "max_connections": "500",
+        "innodb_buffer_pool_size": "21474836480",
+        "innodb_log_file_size": "1073741824",
+        "innodb_flush_log_at_trx_commit": "1",
+        "sync_binlog": "1",
+        "rpl_semi_sync_master_enabled": "ON",
+        "rpl_semi_sync_master_timeout": "10000",
+        "rpl_semi_sync_master_wait_point": "AFTER_SYNC",
+        "binlog_format": "ROW",
+        "gtid_strict_mode": "ON",
+        "server_id": "1"
+      }
+    },
+    {
+      "hostname": "db-replica-01.demo.local",
+      "role": "replica",
+      "system_resources": {
+        "cpu_cores": 8,
+        "ram_gb": 32,
+        "disk_total_gb": 500,
+        "disk_used_gb": 175
+      },
+      "global_status": {
+        "Uptime": "86400",
+        "Questions": "12000000",
+        "Slave_IO_Running": "Yes",
+        "Slave_SQL_Running": "Yes",
+        "Seconds_Behind_Master": "0",
+        "Rpl_semi_sync_slave_status": "ON",
+        "Threads_connected": "25",
+        "Innodb_buffer_pool_read_requests": "350000000",
+        "Innodb_buffer_pool_reads": "1000000"
+      },
+      "global_variables": {
+        "max_connections": "500",
+        "innodb_buffer_pool_size": "21474836480",
+        "rpl_semi_sync_slave_enabled": "ON",
+        "read_only": "ON",
+        "server_id": "2"
+      }
+    },
+    {
+      "hostname": "db-replica-02.demo.local",
+      "role": "replica",
+      "system_resources": {
+        "cpu_cores": 8,
+        "ram_gb": 32,
+        "disk_total_gb": 500,
+        "disk_used_gb": 178
+      },
+      "global_status": {
+        "Uptime": "86200",
+        "Questions": "11500000",
+        "Slave_IO_Running": "Yes",
+        "Slave_SQL_Running": "Yes",
+        "Seconds_Behind_Master": "2",
+        "Rpl_semi_sync_slave_status": "ON",
+        "Threads_connected": "22",
+        "Innodb_buffer_pool_read_requests": "340000000",
+        "Innodb_buffer_pool_reads": "980000"
+      },
+      "global_variables": {
+        "max_connections": "500",
+        "innodb_buffer_pool_size": "21474836480",
+        "rpl_semi_sync_slave_enabled": "ON",
+        "read_only": "ON",
+        "server_id": "3"
+      }
+    }
+  ],
+  "maxscale_config": {
+    "maxscale": {
+      "threads": "auto",
+      "log_info": "true"
+    },
+    "db-master-01": {
+      "type": "server",
+      "address": "10.0.1.10",
+      "port": "3306",
+      "protocol": "MariaDBBackend"
+    },
+    "db-replica-01": {
+      "type": "server",
+      "address": "10.0.1.11",
+      "port": "3306",
+      "protocol": "MariaDBBackend"
+    },
+    "db-replica-02": {
+      "type": "server",
+      "address": "10.0.1.12",
+      "port": "3306",
+      "protocol": "MariaDBBackend"
+    },
+    "replication-monitor": {
+      "type": "monitor",
+      "module": "mariadbmon",
+      "servers": "db-master-01,db-replica-01,db-replica-02",
+      "user": "maxscale_user",
+      "password": "***",
+      "auto_failover": "true",
+      "auto_rejoin": "true"
+    },
+    "read-write-service": {
+      "type": "service",
+      "router": "readwritesplit",
+      "servers": "db-master-01,db-replica-01,db-replica-02",
+      "user": "maxscale_user",
+      "password": "***"
+    }
+  }
+}

@@ -1,0 +1,106 @@
+# MariaDB Cluster Review - Configurable Thresholds
+
+# General Server Metrics
+server:
+  # Connection utilization thresholds
+  connection_utilization:
+    warning: 0.7      # 70%
+    critical: 0.9     # 90%
+    underutilized: 0.3  # Below 30% may be oversized
+  
+  # Buffer pool hit ratio
+  buffer_pool_hit_ratio:
+    warning: 0.95     # Below 95% needs attention
+    critical: 0.90    # Below 90% is critical
+  
+  # Buffer pool usage (pages_data / pages_total)
+  buffer_pool_usage:
+    underutilized: 0.5  # Below 50% may be oversized
+  
+  # Thread usage
+  threads_running:
+    warning: 0.7      # 70% of max_connections
+    critical: 0.9
+  
+  # Slow queries per hour
+  slow_queries_per_hour:
+    warning: 100
+    critical: 500
+
+# Galera-Specific Metrics
+galera:
+  # Flow control paused fraction
+  flow_control_paused:
+    warning: 0.01     # 1% of time paused
+    critical: 0.2     # 20% of time paused is severe
+  
+  # Receive queue average
+  local_recv_queue_avg:
+    warning: 0.5
+    critical: 1.0
+  
+  # Send queue average
+  local_send_queue_avg:
+    warning: 0.5
+    critical: 1.0
+  
+  # Certification conflicts per hour
+  cert_conflicts_per_hour:
+    warning: 10
+    critical: 100
+
+# Replication Metrics
+replication:
+  # Seconds behind master
+  seconds_behind_master:
+    warning: 30
+    critical: 300
+  
+  # Semi-sync wait time (microseconds)
+  semi_sync_avg_wait_time:
+    warning: 1000     # 1ms
+    critical: 10000   # 10ms
+
+# MaxScale Metrics
+maxscale:
+  # Connection pool utilization
+  pool_utilization:
+    warning: 0.7
+    critical: 0.9
+  
+  # Query routing errors per hour
+  routing_errors_per_hour:
+    warning: 10
+    critical: 100
+
+# Resource Utilization Thresholds
+resources:
+  cpu:
+    underutilized: 0.3    # Below 30%
+    optimal_min: 0.3
+    optimal_max: 0.7
+    warning: 0.8
+    critical: 0.95
+  
+  memory:
+    underutilized: 0.5
+    optimal_min: 0.6
+    optimal_max: 0.85
+    warning: 0.9
+    critical: 0.95
+  
+  disk:
+    warning: 0.8
+    critical: 0.9
+
+# Capacity Planning Multipliers
+capacity:
+  # Buffer pool should be % of available RAM
+  buffer_pool_ram_ratio: 0.7
+  
+  # Connections per GB RAM guideline
+  connections_per_gb_ram: 50
+  
+  # Minimum recommended nodes for HA
+  min_galera_nodes: 3
+  min_replica_nodes: 2

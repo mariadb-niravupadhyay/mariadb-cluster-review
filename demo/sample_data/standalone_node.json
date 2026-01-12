@@ -1,0 +1,73 @@
+{
+  "cluster_name": "demo-standalone",
+  "topology_type": "standalone",
+  "nodes": [
+    {
+      "hostname": "db-standalone-01.demo.local",
+      "role": "standalone",
+      "system_resources": {
+        "cpu_cores": 4,
+        "ram_gb": 16,
+        "disk_total_gb": 200,
+        "disk_used_gb": 85
+      },
+      "global_status": {
+        "Uptime": "172800",
+        "Questions": "8500000",
+        "Queries": "8500000",
+        "Com_select": "6000000",
+        "Com_insert": "1500000",
+        "Com_update": "800000",
+        "Com_delete": "200000",
+        "Threads_connected": "25",
+        "Threads_running": "3",
+        "Max_used_connections": "85",
+        "Connections": "45000",
+        "Aborted_clients": "150",
+        "Aborted_connects": "25",
+        "Bytes_received": "2500000000",
+        "Bytes_sent": "15000000000",
+        "Slow_queries": "450",
+        "Innodb_buffer_pool_read_requests": "120000000",
+        "Innodb_buffer_pool_reads": "360000",
+        "Innodb_buffer_pool_pages_total": "655360",
+        "Innodb_buffer_pool_pages_free": "25000",
+        "Innodb_buffer_pool_pages_data": "580000",
+        "Innodb_buffer_pool_pages_dirty": "1200",
+        "Innodb_data_reads": "250000",
+        "Innodb_data_writes": "180000",
+        "Innodb_row_lock_waits": "85",
+        "Innodb_row_lock_time_avg": "15",
+        "Key_read_requests": "5000000",
+        "Key_reads": "50000",
+        "Open_tables": "256",
+        "Opened_tables": "1500",
+        "Table_locks_waited": "25",
+        "Created_tmp_tables": "85000",
+        "Created_tmp_disk_tables": "2500"
+      },
+      "global_variables": {
+        "max_connections": "200",
+        "innodb_buffer_pool_size": "10737418240",
+        "innodb_buffer_pool_instances": "4",
+        "innodb_log_file_size": "536870912",
+        "innodb_flush_log_at_trx_commit": "1",
+        "innodb_file_per_table": "ON",
+        "query_cache_size": "0",
+        "query_cache_type": "OFF",
+        "slow_query_log": "ON",
+        "long_query_time": "2",
+        "log_slow_verbosity": "query_plan,explain",
+        "tmp_table_size": "134217728",
+        "max_heap_table_size": "134217728",
+        "join_buffer_size": "262144",
+        "sort_buffer_size": "262144",
+        "read_buffer_size": "131072",
+        "read_rnd_buffer_size": "262144",
+        "table_open_cache": "4000",
+        "thread_cache_size": "32",
+        "server_id": "1"
+      }
+    }
+  ]
+}

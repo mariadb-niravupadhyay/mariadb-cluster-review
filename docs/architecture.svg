@@ -1,0 +1,205 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 850">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#003545"/>
+      <stop offset="100%" style="stop-color:#00687a"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00b4d8"/>
+      <stop offset="100%" style="stop-color:#48cae4"/>
+    </linearGradient>
+    <linearGradient id="aiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#a855f7"/>
+    </linearGradient>
+    <linearGradient id="ragGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981"/>
+      <stop offset="100%" style="stop-color:#34d399"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="850" fill="#0f172a"/>
+  
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="26" font-weight="bold">MariaDB AI Architecture Review Tool</text>
+  <text x="600" y="65" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="14">Answers Critical Questions: Workload | Scaling | HA/DR | Bottlenecks | Performance</text>
+  
+  <!-- Frontend Box -->
+  <g transform="translate(100, 110)">
+    <rect width="1000" height="120" rx="12" fill="#1e293b" stroke="#334155" stroke-width="2" filter="url(#shadow)"/>
+    <rect width="1000" height="35" rx="12" fill="url(#headerGrad)"/>
+    <text x="20" y="24" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Frontend (Vanilla HTML + JS + CSS)</text>
+    
+    <!-- Frontend Components -->
+    <g transform="translate(20, 55)">
+      <rect width="140" height="50" rx="8" fill="#0f172a" stroke="#00b4d8" stroke-width="2"/>
+      <text x="70" y="30" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11">Dashboard</text>
+    </g>
+    <g transform="translate(175, 55)">
+      <rect width="140" height="50" rx="8" fill="#0f172a" stroke="#00b4d8" stroke-width="2"/>
+      <text x="70" y="30" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11">Customers</text>
+    </g>
+    <g transform="translate(330, 55)">
+      <rect width="140" height="50" rx="8" fill="#0f172a" stroke="#00b4d8" stroke-width="2"/>
+      <text x="70" y="30" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11">Topologies</text>
+    </g>
+    <g transform="translate(485, 55)">
+      <rect width="140" height="50" rx="8" fill="#0f172a" stroke="#00b4d8" stroke-width="2"/>
+      <text x="70" y="30" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11">Nodes</text>
+    </g>
+    <g transform="translate(640, 55)">
+      <rect width="180" height="50" rx="8" fill="#0f172a" stroke="#8b5cf6" stroke-width="2"/>
+      <text x="90" y="22" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11">Analysis &amp; Chat</text>
+      <text x="90" y="38" text-anchor="middle" fill="#8b5cf6" font-family="Arial, sans-serif" font-size="9">AI-Powered</text>
+    </g>
+    <g transform="translate(835, 55)">
+      <rect width="140" height="50" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+      <text x="70" y="30" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11">Logs Analyzer</text>
+    </g>
+  </g>
+  
+  <!-- Arrow Down -->
+  <path d="M 600 235 L 600 270" stroke="#00b4d8" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <polygon points="600,280 595,265 605,265" fill="#00b4d8"/>
+  
+  <!-- Backend Box -->
+  <g transform="translate(100, 290)">
+    <rect width="1000" height="180" rx="12" fill="#1e293b" stroke="#334155" stroke-width="2" filter="url(#shadow)"/>
+    <rect width="1000" height="35" rx="12" fill="url(#headerGrad)"/>
+    <text x="20" y="24" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Backend (Python FastAPI)</text>
+    
+    <!-- Backend Components Row 1: Routes -->
+    <g transform="translate(30, 55)">
+      <rect width="220" height="50" rx="8" fill="#0f172a" stroke="#fbbf24" stroke-width="2"/>
+      <text x="110" y="25" text-anchor="middle" fill="#fbbf24" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Data Routes</text>
+      <text x="110" y="42" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10">/api/v1/data/*</text>
+    </g>
+    <g transform="translate(270, 55)">
+      <rect width="220" height="50" rx="8" fill="url(#aiGrad)" stroke-width="0"/>
+      <text x="110" y="20" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11" font-weight="bold">AI Routes</text>
+      <text x="110" y="34" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="9">Analysis | Chat | Logs</text>
+      <text x="110" y="46" text-anchor="middle" fill="#c4b5fd" font-family="Arial, sans-serif" font-size="8">/api/v1/ai/*</text>
+    </g>
+    <g transform="translate(510, 55)">
+      <rect width="220" height="50" rx="8" fill="url(#aiGrad)" stroke-width="0"/>
+      <text x="110" y="20" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Review Routes</text>
+      <text x="110" y="34" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="9">Topology Architecture Review</text>
+      <text x="110" y="46" text-anchor="middle" fill="#c4b5fd" font-family="Arial, sans-serif" font-size="8">/api/v1/review/*</text>
+    </g>
+    <g transform="translate(750, 55)">
+      <rect width="220" height="50" rx="8" fill="#0f172a" stroke="#ec4899" stroke-width="2"/>
+      <text x="110" y="25" text-anchor="middle" fill="#ec4899" font-family="Arial, sans-serif" font-size="11" font-weight="bold">Log Routes</text>
+      <text x="110" y="42" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10">/api/v1/logs/*</text>
+    </g>
+    
+    <!-- Backend Components Row 2: Services -->
+    <g transform="translate(30, 120)">
+      <rect width="220" height="45" rx="8" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+      <text x="110" y="28" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11">Database Service</text>
+    </g>
+    <g transform="translate(270, 120)">
+      <rect width="220" height="45" rx="8" fill="#0f172a" stroke="#8b5cf6" stroke-width="2"/>
+      <text x="110" y="28" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11">Gemini Client</text>
+    </g>
+    <g transform="translate(510, 120)">
+      <rect width="220" height="45" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="2"/>
+      <text x="110" y="28" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11">RAG Service</text>
+    </g>
+    <g transform="translate(750, 120)">
+      <rect width="220" height="45" rx="8" fill="#0f172a" stroke="#00b4d8" stroke-width="2"/>
+      <text x="110" y="28" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="11">Vector Store</text>
+    </g>
+  </g>
+  
+  <!-- Arrows to External Services -->
+  <path d="M 300 475 L 300 540" stroke="#00b4d8" stroke-width="2"/>
+  <polygon points="300,550 295,535 305,535" fill="#00b4d8"/>
+  
+  <path d="M 600 475 L 600 540" stroke="#8b5cf6" stroke-width="2"/>
+  <polygon points="600,550 595,535 605,535" fill="#8b5cf6"/>
+  
+  <path d="M 900 475 L 900 540" stroke="#10b981" stroke-width="2"/>
+  <polygon points="900,550 895,535 905,535" fill="#10b981"/>
+  
+  <!-- External Services -->
+  <!-- MariaDB Cloud -->
+  <g transform="translate(100, 560)">
+    <rect width="380" height="160" rx="12" fill="#1e293b" stroke="#00b4d8" stroke-width="3" filter="url(#shadow)"/>
+    <rect width="380" height="35" rx="12" fill="url(#accentGrad)"/>
+    <text x="190" y="24" text-anchor="middle" fill="#003545" font-family="Arial, sans-serif" font-size="14" font-weight="bold">MariaDB Cloud (SkySQL)</text>
+    
+    <g transform="translate(15, 50)">
+      <rect width="170" height="45" rx="6" fill="#0f172a" stroke="#fbbf24" stroke-width="1"/>
+      <text x="85" y="18" text-anchor="middle" fill="#fbbf24" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Structured Data</text>
+      <text x="85" y="35" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="9">customers | clusters | nodes</text>
+    </g>
+    <g transform="translate(195, 50)">
+      <rect width="170" height="45" rx="6" fill="#0f172a" stroke="#10b981" stroke-width="1"/>
+      <text x="85" y="18" text-anchor="middle" fill="#10b981" font-family="Arial, sans-serif" font-size="10" font-weight="bold">Vector Store (RAG)</text>
+      <text x="85" y="35" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="9">kb_documents | VECTOR(768)</text>
+    </g>
+    <g transform="translate(15, 105)">
+      <rect width="350" height="40" rx="6" fill="#0f172a" stroke="#00b4d8" stroke-width="1"/>
+      <text x="175" y="17" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="10">VEC_DISTANCE() for Semantic Search</text>
+      <text x="175" y="32" text-anchor="middle" fill="#94a3b8" font-family="Arial, sans-serif" font-size="9">MariaDB Documentation Knowledge Base</text>
+    </g>
+  </g>
+  
+  <!-- Google Gemini -->
+  <g transform="translate(500, 560)">
+    <rect width="300" height="160" rx="12" fill="#1e293b" stroke="#8b5cf6" stroke-width="3" filter="url(#shadow)"/>
+    <rect width="300" height="35" rx="12" fill="url(#aiGrad)"/>
+    <text x="150" y="24" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Google Gemini 2.0 Flash</text>
+    
+    <g transform="translate(15, 50)">
+      <rect width="270" height="95" rx="6" fill="#0f172a" stroke="#8b5cf6" stroke-width="1"/>
+      <text x="135" y="18" text-anchor="middle" fill="#8b5cf6" font-family="Arial, sans-serif" font-size="10" font-weight="bold">AI Answers Critical Questions:</text>
+      <text x="20" y="35" fill="white" font-family="Arial, sans-serif" font-size="9">• Can architecture handle workload?</text>
+      <text x="20" y="50" fill="white" font-family="Arial, sans-serif" font-size="9">• Scale UP or scale DOWN?</text>
+      <text x="20" y="65" fill="white" font-family="Arial, sans-serif" font-size="9">• HA/DR requirements met?</text>
+      <text x="20" y="80" fill="white" font-family="Arial, sans-serif" font-size="9">• Bottlenecks &amp; Performance issues?</text>
+    </g>
+  </g>
+  
+  <!-- Critical Questions Box -->
+  <g transform="translate(820, 560)">
+    <rect width="280" height="160" rx="12" fill="#1e293b" stroke="#f59e0b" stroke-width="3" filter="url(#shadow)"/>
+    <rect width="280" height="35" rx="12" fill="#f59e0b"/>
+    <text x="140" y="24" text-anchor="middle" fill="#0f172a" font-family="Arial, sans-serif" font-size="14" font-weight="bold">Analysis Outputs</text>
+    
+    <g transform="translate(15, 50)">
+      <text x="10" y="15" fill="#10b981" font-family="Arial, sans-serif" font-size="10">✓ Capacity Assessment</text>
+      <text x="10" y="32" fill="#10b981" font-family="Arial, sans-serif" font-size="10">✓ HA/DR Status</text>
+      <text x="10" y="49" fill="#10b981" font-family="Arial, sans-serif" font-size="10">✓ Workload Profile</text>
+      <text x="10" y="66" fill="#10b981" font-family="Arial, sans-serif" font-size="10">✓ Bottlenecks Detected</text>
+      <text x="10" y="83" fill="#10b981" font-family="Arial, sans-serif" font-size="10">✓ Recommendations</text>
+      <text x="10" y="100" fill="#94a3b8" font-family="Arial, sans-serif" font-size="9">+ RAG Documentation References</text>
+    </g>
+  </g>
+  
+  <!-- Legend -->
+  <g transform="translate(50, 755)">
+    <text x="0" y="15" fill="#94a3b8" font-family="Arial, sans-serif" font-size="12" font-weight="bold">Key:</text>
+    
+    <rect x="50" y="0" width="20" height="20" rx="4" fill="url(#accentGrad)"/>
+    <text x="80" y="15" fill="white" font-family="Arial, sans-serif" font-size="10">MariaDB Cloud</text>
+    
+    <rect x="190" y="0" width="20" height="20" rx="4" fill="url(#aiGrad)"/>
+    <text x="220" y="15" fill="white" font-family="Arial, sans-serif" font-size="10">Gemini AI</text>
+    
+    <rect x="300" y="0" width="20" height="20" rx="4" fill="url(#ragGrad)"/>
+    <text x="330" y="15" fill="white" font-family="Arial, sans-serif" font-size="10">RAG Pipeline</text>
+    
+    <rect x="430" y="0" width="20" height="20" rx="4" fill="#f59e0b"/>
+    <text x="460" y="15" fill="white" font-family="Arial, sans-serif" font-size="10">Analysis Output</text>
+    
+    <text x="600" y="15" fill="#64748b" font-family="Arial, sans-serif" font-size="11">Built with Vanilla JS + FastAPI + MariaDB Cloud + Google Gemini</text>
+  </g>
+  
+  <!-- Footer -->
+  <text x="600" y="820" text-anchor="middle" fill="#475569" font-family="Arial, sans-serif" font-size="12">MariaDB AI Architecture Review Tool - Answers Critical Database Architecture Questions</text>
+</svg>

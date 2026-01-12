@@ -1,0 +1,21 @@
+{
+  "mariadb_logs": [
+    "2025-01-07 10:15:23 [ERROR] InnoDB: Unable to lock ./ibdata1 error: 11",
+    "2025-01-07 10:16:45 [Warning] Aborted connection 12345 to db: 'appdb' user: 'appuser' host: '10.0.1.50' (Got timeout reading communication packets)",
+    "2025-01-07 10:18:02 [Note] WSREP: Member 2.0 (db-node-03) synced with group.",
+    "2025-01-07 10:22:15 [ERROR] WSREP: Failed to open channel 'demo-galera-cluster' at 'gcomm://db-node-01,db-node-02,db-node-03': 110 (Connection timed out)",
+    "2025-01-07 10:25:33 [Warning] WSREP: last inactive check more than PT1.5S ago (PT3.2S), skipping check"
+  ],
+  "maxscale_logs": [
+    "2025-01-07 10:15:00 notice: Server changed state: db-node-01[10.0.1.10:3306]: lost_slave. [Slave, Synced, Running] -> [Running]",
+    "2025-01-07 10:15:02 error: Monitor was unable to connect to server db-node-01[10.0.1.10:3306]: 'Can't connect to server on '10.0.1.10' (115)'",
+    "2025-01-07 10:15:10 notice: Server changed state: db-node-01[10.0.1.10:3306]: master_up. [Down] -> [Master, Synced, Running]",
+    "2025-01-07 10:20:45 warning: [readwritesplit] Server db-node-02 is replicating from a server other than the current master db-node-03",
+    "2025-01-07 10:25:00 notice: Read 29 user@host entries from 'db-node-01' for service 'galera-service'."
+  ],
+  "slow_query_logs": [
+    "# Time: 2025-01-07T10:15:30.123456Z\n# User@Host: appuser[appuser] @ app-server-01 [10.0.2.10]\n# Query_time: 5.234567  Lock_time: 0.000123 Rows_sent: 1  Rows_examined: 1500000\nSELECT * FROM orders WHERE status = 'pending' AND created_at < DATE_SUB(NOW(), INTERVAL 30 DAY);",
+    "# Time: 2025-01-07T10:18:45.789012Z\n# User@Host: reportuser[reportuser] @ report-server [10.0.2.20]\n# Query_time: 12.567890  Lock_time: 0.000456 Rows_sent: 50000  Rows_examined: 2500000\nSELECT customer_id, SUM(amount) as total FROM transactions GROUP BY customer_id ORDER BY total DESC;",
+    "# Time: 2025-01-07T10:22:10.345678Z\n# User@Host: appuser[appuser] @ app-server-02 [10.0.2.11]\n# Query_time: 3.456789  Lock_time: 2.123456 Rows_sent: 0  Rows_examined: 500000\nUPDATE inventory SET quantity = quantity - 1 WHERE product_id = 12345 AND quantity > 0;"
+  ]
+}
