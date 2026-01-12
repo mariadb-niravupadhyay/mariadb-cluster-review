@@ -13,7 +13,7 @@ An AI-powered tool for MariaDB architecture review and logs analysis. Reviews da
 ---
 
 ### Link to Supporting Documents
-- **GitHub Repository**: [Link to repo]
+- **GitHub Repository**: [\[Link to repo\]](https://github.com/mariadb-niravupadhyay/mariadb-cluster-review)
 - **README**: See README.md in repository root
 - **Demo Video**: [Link to video]
 - **Presentation**: See `docs/PRESENTATION.pdf`

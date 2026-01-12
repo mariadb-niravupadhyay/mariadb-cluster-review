@@ -13,7 +13,8 @@ The MariaDB AI Architecture Review Tool is a full-stack application that combine
 1. **Modern Web Frontend** - Vanilla JavaScript with responsive CSS
 2. **FastAPI Backend** - Python REST API with modular service architecture
 3. **MariaDB Cloud** - Unified storage for structured data AND vector embeddings
-4. **Google Gemini 2.0 Flash** - AI-powered analysis with RAG enhancement
+4. **MariaDB Vector & RAG** - Native VECTOR(768) type with VEC_DISTANCE() for similarity search, enabling Retrieval Augmented Generation
+5. **Google Gemini 2.0 Flash** - AI-powered analysis with RAG enhancement
 
 ---
 

@@ -35,3 +35,7 @@ Thumbs.db
 # Local development
 *.local
 *.log
+
+# Demo files (local only)
+docs/DEMO_SCRIPT.md
+examples/
